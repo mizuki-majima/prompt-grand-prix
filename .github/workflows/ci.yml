@@ -18,3 +18,5 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run build
+      # redirect/target-url.txt に書いた転送先を、マージ前に確かめる（README「PartyBox への引っ越し」）
+      - run: node redirect/build.mjs "$RUNNER_TEMP/redirect-check"

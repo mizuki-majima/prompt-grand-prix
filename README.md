@@ -1,5 +1,8 @@
 # プロンプト・グランプリ 🏁
 
+> **このゲームは [PartyBox](https://github.com/mizuki-majima/PartyBox/tree/main/grand-prix) に統合しました。** 開発は PartyBox の `grand-prix/` で続けています（このリポジトリの履歴ごと取り込み済み）。
+> このリポジトリは、旧 URL を PartyBox へ転送したあとにアーカイブします（下の「[PartyBox への引っ越し](#partybox-への引っ越し)」）。
+
 話し言葉で「こんな車」と書くと、その通りのミニカーが 3D で生まれ、
 おもちゃのサーキットで CPU の車とレースする。プレイヤーは運転せず、応援しながら観戦するブラウザゲームです。
 
@@ -100,6 +103,28 @@ npm run dev        # http://localhost:5173 で開発サーバー
 
 - `index.html` の `og:image` は相対パスです。公開 URL が決まったら絶対 URL（`https://…/og.png`）にすると SNS でのプレビューが確実になります
 - 本番ビルドには Content-Security-Policy を `<meta>` で入れています（`vite.config.ts`）。外部の API を呼ぶようにしたら `connect-src` に追加してください
+
+---
+
+## PartyBox への引っ越し
+
+GitHub Pages の旧 URL（`https://mizuki-majima.github.io/prompt-grand-prix/`）に来た人を、PartyBox のプロンプト・グランプリ（`<PartyBox の URL>/grand-prix/`）へ送るための手順です。
+
+**始める前に:** PartyBox 側の統合（`grand-prix/`）が PartyBox の main にマージされてサーバーに反映され、`<PartyBox の URL>/grand-prix/` でゲームが実際に遊べることを確かめる（AWS の構成は main をデプロイする。サーバーがすでにあれば `sudo /opt/partybox/deploy.sh` で反映）。
+
+1. `redirect/target-url.txt` に PartyBox の URL を 1 行で書く（`https://` から。URL のほかは書かない）
+   - AWS の構成なら CloudFormation の「出力」タブの `Url` をそのまま書く（例: `https://party.example.com`、`https://1-2-3-4.sslip.io`。IP の点はハイフンになる）
+   - アーカイブ後の転送先は変えにくいので、なるべく独自ドメインにする（sslip.io の URL はスタックを作り直すと変わる）
+2. プルリクエストを作ると CI が転送ページを試しに作り、ログに転送先を出す（URL の書き方が正しくなければ CI が失敗する）。確認して main にマージする → Actions の「Deploy to GitHub Pages」が、ゲームの代わりに転送ページ（`index.html` と `404.html`）を公開する
+   - 転送ページは `noindex` と `canonical` 付きなので、検索結果も PartyBox へ移っていく
+   - URL の書き方が正しくないとデプロイは失敗し、それまでのページが残る（`node redirect/build.mjs dist` で手元でも確かめられる）。行き先のサーバーが動いているかまでは確かめないので、3 で確認する
+3. Actions の実行（build と deploy）が緑で終わってから、旧 URL をシークレットウィンドウで開き、PartyBox の `/grand-prix/` でゲームが始まることを確かめる（GitHub Pages のページは最大 10 分ブラウザに残るため）
+4. Vercel にもこのリポジトリをつないでいた場合は、そのプロジェクトを削除する
+5. Settings → General → Danger Zone → **Archive this repository**（アーカイブしても GitHub Pages の公開は続くので、転送ページは残る）
+
+転送先を変える・止めるときは、Unarchive this repository → `redirect/target-url.txt` を書き換えて（または Settings → Pages で公開をやめて）マージ → もう一度アーカイブ。PartyBox のドメインを変える・スタックを消す前に行う。
+
+`redirect/target-url.txt` に URL が無いあいだは、いままでどおりゲームを公開します。
 
 ---
 
