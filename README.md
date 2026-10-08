@@ -1,5 +1,8 @@
 # プロンプト・グランプリ 🏁
 
+> **このゲームは [PartyBox](https://github.com/mizuki-majima/PartyBox) に統合しました。** 開発は PartyBox の `grand-prix/` で続けています（このリポジトリの履歴ごと取り込み済み）。
+> このリポジトリは、旧 URL を PartyBox へ転送したあとにアーカイブします（下の「[PartyBox への引っ越し](#partybox-への引っ越し)」）。
+
 話し言葉で「こんな車」と書くと、その通りのミニカーが 3D で生まれ、
 おもちゃのサーキットで CPU の車とレースする。プレイヤーは運転せず、応援しながら観戦するブラウザゲームです。
 
@@ -100,6 +103,24 @@ npm run dev        # http://localhost:5173 で開発サーバー
 
 - `index.html` の `og:image` は相対パスです。公開 URL が決まったら絶対 URL（`https://…/og.png`）にすると SNS でのプレビューが確実になります
 - 本番ビルドには Content-Security-Policy を `<meta>` で入れています（`vite.config.ts`）。外部の API を呼ぶようにしたら `connect-src` に追加してください
+
+---
+
+## PartyBox への引っ越し
+
+GitHub Pages の旧 URL（`https://mizuki-majima.github.io/prompt-grand-prix/`）に来た人を、PartyBox のプロンプト・グランプリ（`<PartyBox の URL>/grand-prix/`）へ送るための手順です。
+PartyBox の公開 URL（独自ドメイン、または `<IP>.sslip.io`）が決まってから行います。
+
+1. `redirect/target-url.txt` に PartyBox の URL を 1 行で書く（例: `https://party.example.com`）
+2. main にマージする → Actions の「Deploy to GitHub Pages」が、ゲームの代わりに転送ページ（`index.html` と `404.html`）を公開する
+   - 転送ページは `noindex` と `canonical` 付きなので、検索結果も PartyBox へ移っていく
+   - URL が正しくないとデプロイは失敗し、それまでのページが残る（`node redirect/build.mjs dist` で手元でも確かめられる）
+3. 旧 URL を開いて、PartyBox の `/grand-prix/` に移動することを確かめる
+4. Settings → General → Danger Zone → **Archive this repository**（アーカイブしても GitHub Pages の公開は続くので、転送ページは残る）
+
+Vercel にもこのリポジトリをつないでいた場合は、そのプロジェクトも削除するか、同じ転送ページに差し替える。
+
+`redirect/target-url.txt` に URL が無いあいだは、いままでどおりゲームを公開します。
 
 ---
 

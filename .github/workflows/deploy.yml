@@ -1,6 +1,9 @@
 # main ブランチに push されたら、テストしてから GitHub Pages に公開する。
 # 初回だけ、リポジトリの Settings → Pages → Build and deployment → Source を
 # 「GitHub Actions」にしておくこと。
+#
+# このゲームは PartyBox に統合した。redirect/target-url.txt に PartyBox の URL を書くと、
+# ゲームの代わりに PartyBox の /grand-prix/ への転送ページを公開する（README「PartyBox への引っ越し」）。
 name: Deploy to GitHub Pages
 
 on:
@@ -22,13 +25,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      # 転送先が書いてあれば dist/ に転送ページを作る（redirect=true）。無ければ何もしない
+      - id: redirect
+        run: node redirect/build.mjs dist
+      - if: steps.redirect.outputs.redirect != 'true'
+        uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
-      - run: npm ci
-      - run: npm test
-      - run: npm run build
+      - if: steps.redirect.outputs.redirect != 'true'
+        run: npm ci
+      - if: steps.redirect.outputs.redirect != 'true'
+        run: npm test
+      - if: steps.redirect.outputs.redirect != 'true'
+        run: npm run build
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

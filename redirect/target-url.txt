@@ -1,0 +1,4 @@
+# PartyBox の公開 URL を 1 行で書く（例: https://party.example.com）。
+# 書いて main にマージすると、GitHub Pages はこのゲームの代わりに
+# PartyBox の /grand-prix/ への転送ページを公開する。
+# URL が無い（コメントだけの）あいだは、いままでどおりゲームを公開する。
