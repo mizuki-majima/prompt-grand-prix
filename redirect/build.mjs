@@ -25,6 +25,7 @@ export function readBaseUrl(text) {
 
 /** PartyBox の URL → プロンプト・グランプリのページの URL */
 export function targetUrl(base) {
+  if (/\s/.test(base)) throw new Error(`URL の行には URL だけを書いてください: ${base}`);
   let url;
   try {
     url = new URL(base);
